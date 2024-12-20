@@ -33,7 +33,7 @@ app.use(express.json());
 
 // Routes
 app.use("/api/v1/", require("./routes/propertyRoutes"));
-// app.use("/api/v1/", require("./routes/uploadRoutes"));
+app.use("/api/v1/", require("./routes/employeeRoutes"));
 
 // Error handler middleware
 app.use(errorHandler);

@@ -9,7 +9,7 @@ const connectDatabase = async (): Promise<void> => {
     }
 
     await mongoose.connect(dbUri, {
-      dbName: 'express-ts',
+      dbName: 'HrDashboard',
     });
 
     console.log('MongoDB connected successfully');
