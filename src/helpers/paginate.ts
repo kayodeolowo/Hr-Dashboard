@@ -1,35 +1,34 @@
-type PaginateResult = {
-    totalItems: number;
-    totalPages: number;
-    currentPage: number;
-    data: any[];
+import { Model, Document } from "mongoose";
+
+interface PaginatedResult<T> {
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  data: T[];
+}
+
+// Generic function for pagination
+export const paginateQuery = async <T extends Document>(
+  model: Model<T>,
+  filter: any = {},
+  page: number = 1,
+  pageSize: number = 10
+): Promise<PaginatedResult<T>> => {
+  const skip = (page - 1) * pageSize;
+
+  // Fetch paginated data
+  const data = await model.find(filter).skip(skip).limit(pageSize);
+
+  // Count total documents matching the filter
+  const totalItems = await model.countDocuments(filter);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(totalItems / pageSize);
+
+  return {
+    totalItems,
+    totalPages,
+    currentPage: page,
+    data,
   };
-  
-  const paginate = (data: any[], page: number, pageSize: number): PaginateResult => {
-    page = parseInt(page.toString());
-    pageSize = parseInt(pageSize.toString());
-  
-    const totalItems = data.length;
-    const totalPages = Math.ceil(totalItems / pageSize);
-    const skip = (page - 1) * pageSize;
-    const paginatedData = data.slice(skip, skip + pageSize);
-  
-    return {
-      totalItems,
-      totalPages,
-      currentPage: page,
-      data: paginatedData
-    };
-  };
-  
-  const search = (data: any[], searchTerm: string, fields: string[]): any[] => {
-    if (!searchTerm) return data;
-  
-    const regex = new RegExp(searchTerm, 'i');
-    return data.filter(item =>
-      fields.some(field => regex.test(item[field]?.toString() || ''))
-    );
-  };
-  
-  export { paginate, search };
-  
+};

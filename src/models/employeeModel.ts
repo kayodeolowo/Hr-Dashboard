@@ -7,6 +7,11 @@ import { EmployeeTypes } from './Types';
 // Create the Mongoose schema
 const employeeSchema: Schema = new Schema(
   {
+    avatar: {
+      type: String,      
+    },
+
+
     firstName: {
       type: String,
       required: [true, "First name is required"],
@@ -23,6 +28,12 @@ const employeeSchema: Schema = new Schema(
       unique: true,
       match: [/\S+@\S+\.\S+/, "Please enter a valid email"],
     },
+
+    employeeId: { type: String, 
+      unique: true, 
+       },
+
+      
     phoneNumber: {
       type: String,
       required: [true, "Phone number is required"],
@@ -48,6 +59,24 @@ const employeeSchema: Schema = new Schema(
         required: [true, "Department is required"],
         enum: ["IT", "Engineering", "Design"],
       },
+
+      roleType: {
+        type: String,
+        required: [true, "Role Type is required"],
+        enum: ["Onsite", "Hybrid", "Remote"],
+      },
+
+
+      joinDate: {
+        type: Date,
+        required: [true, "Date of Joining is required"],
+      },
+
+      documents: {
+        type: [String],  // Array of strings to store the URLs
+        default: [], // Default to an empty array if no documents are provided
+      },
+
     nationality: {
       type: String,
       required: [true, "Nationality is required"],

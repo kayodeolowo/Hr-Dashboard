@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import mongoose from "mongoose";
 import Property from "../models/propertiesModels"
-import { paginate, search } from "../helpers/paginate";
+// import { paginate, search } from "../helpers/paginate";
 
 // Define the types for the request body
 interface PropertyRequestBody {
@@ -48,46 +48,46 @@ const createProperties = asyncHandler(async (req: Request, res: Response) => {
 });
 
 // Get properties
-const getProperties = asyncHandler(async (req: Request, res: Response) => {
-  // Extract query parameters with default values
-  let {
-    page = 1,
-    pageSize = 10,
-    search: searchTerm = "",
-    propertyType,
-  }: {
-    page?: number;
-    pageSize?: number;
-    search?: string;
-    propertyType?: string;
-  } = req.query;
+// const getProperties = asyncHandler(async (req: Request, res: Response) => {
+//   // Extract query parameters with default values
+//   let {
+//     page = 1,
+//     pageSize = 10,
+//     search: searchTerm = "",
+//     propertyType,
+//   }: {
+//     page?: number;
+//     pageSize?: number;
+//     search?: string;
+//     propertyType?: string;
+//   } = req.query;
 
-  // Fetch all properties
-  const allProperties = await Property.find().select("-__v").sort({ createdAt: -1 });
+//   // Fetch all properties
+//   const allProperties = await Property.find().select("-__v").sort({ createdAt: -1 });
 
-  // Filter by propertyType if provided
-  const filteredProperties = propertyType
-    ? allProperties.filter((property) => property.property_type === propertyType)
-    : allProperties;
+//   // Filter by propertyType if provided
+//   const filteredProperties = propertyType
+//     ? allProperties.filter((property) => property.property_type === propertyType)
+//     : allProperties;
 
-  // Apply search (by property_name and address)
-  const searchedProperties = search(filteredProperties, searchTerm, ["property_name", "address"]);
+//   // Apply search (by property_name and address)
+//   const searchedProperties = search(filteredProperties, searchTerm, ["property_name", "address"]);
 
-  // Apply pagination
-  const paginatedProperties = paginate(searchedProperties, page, pageSize);
+//   // Apply pagination
+//   const paginatedProperties = paginate(searchedProperties, page, pageSize);
 
-  // Send response
-  res.status(200).json({
-    status: "success",
-    message: "Properties fetched successfully",
-    data: {
-      properties: paginatedProperties.data,
-      totalItems: paginatedProperties.totalItems,
-      totalPages: paginatedProperties.totalPages,
-      currentPage: paginatedProperties.currentPage,
-    },
-  });
-});
+//   // Send response
+//   res.status(200).json({
+//     status: "success",
+//     message: "Properties fetched successfully",
+//     data: {
+//       properties: paginatedProperties.data,
+//       totalItems: paginatedProperties.totalItems,
+//       totalPages: paginatedProperties.totalPages,
+//       currentPage: paginatedProperties.currentPage,
+//     },
+//   });
+// });
 
 // Get a property by ID
 const getPropertyById = asyncHandler(async (req: Request, res: Response) => {
@@ -110,4 +110,4 @@ const getPropertyById = asyncHandler(async (req: Request, res: Response) => {
   });
 });
 
-export { createProperties, getProperties, getPropertyById };
+export { createProperties,  getPropertyById };
