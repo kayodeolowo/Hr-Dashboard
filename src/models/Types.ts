@@ -1,5 +1,12 @@
 import { Document } from "mongoose";
 
+interface Attendance {
+  date: Date;
+  checkInTime: Date;
+  checkOutTime: Date;
+}
+
+
 export interface EmployeeTypes extends Document {
   avatar: string;
   firstName: string;
@@ -16,4 +23,5 @@ export interface EmployeeTypes extends Document {
   department: string;
   employeeId: string;
   documents: string[];
+  attendance: Attendance[]; 
 }

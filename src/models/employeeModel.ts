@@ -97,6 +97,21 @@ const employeeSchema: Schema = new Schema(
       required: [true, "State is required"],
       trim: true,
     },
+
+    attendance: [{ // Define attendance as an array of objects
+      date: { type: Date, required: true },
+      checkInTime: { type: Date, required: true },
+      checkOutTime: { type: Date, required: true },
+      workingHours: {
+        type: Number,
+        required: true,  // Include the working hours as a required field
+      },
+      status: {
+        type: String,
+        enum: ['On time', 'Late'],  // Only allow these two values for status
+        required: true,  // Include status as a required field
+      },
+    }],
   },
   {
     timestamps: true, // Automatically adds createdAt and updatedAt fields

@@ -32,8 +32,9 @@ cloudinary.config({
 app.use(express.json());
 
 // Routes
-app.use("/api/v1/", require("./routes/propertyRoutes"));
+
 app.use("/api/v1/", require("./routes/employeeRoutes"));
+app.use("/api/v1/", require("./routes/attendanceRoutes"));
 
 // Error handler middleware
 app.use(errorHandler);
