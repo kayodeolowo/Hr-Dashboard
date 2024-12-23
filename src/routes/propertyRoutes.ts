@@ -11,4 +11,4 @@ const router = express.Router();
 router.route("/properties/:id").get(getPropertyById);
 router.route("/createProperty").post(createProperties);
 
-module.exports = router;
+export default router;

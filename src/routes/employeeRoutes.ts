@@ -1,12 +1,18 @@
-import express, { Request, Response } from 'express';
-import { addEmployee, getEmployeeById, getEmployees, updateEmployee } from '../controllers/employeeController';
+import express from 'express';
+import { validateToken } from '../middlewares/validateToken';
+import { 
+    addEmployee, getEmployeeById, 
+    getEmployees, updateEmployee 
+} from '../controllers/employeeController';
 
 const router = express.Router();
 
-router.route("/addEmployee").post(addEmployee);
-router.route("/employees").get(getEmployees);
-router.route("/employee/:id").get(getEmployeeById);
-router.route("/employee/:id").put(updateEmployee);
+// Apply validateToken to all routes
+router.use(validateToken);
 
+router.post("/addEmployee", addEmployee);
+router.get("/employees", getEmployees);
+router.get("/employee/:id", getEmployeeById);
+router.put("/employee/:id", updateEmployee);
 
-module.exports = router;
+export default router;

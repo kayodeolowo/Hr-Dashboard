@@ -1,0 +1,70 @@
+[
+   
+    {
+      "firstName": "Liam",
+      "lastName": "Johnson",
+      "email": "liamj@example.com",
+      "phoneNumber": "987654321098765",
+      "dateOfBirth": "1985-11-25",
+      "maritalStatus": "Married",
+      "gender": "Male",
+      "joinDate": "2019-08-01",
+      "nationality": "Canadian",
+      "address": "456 Oak Avenue",
+      "city": "Toronto",
+      "state": "ON",
+      "department": "Engineering",
+      "roleType": "Hybrid",
+      "avatar": "https://unsplash.com/photos/Klby0fL1vJk",
+      "documents": [
+        "https://unsplash.com/photos/mbGxz7pt0jM",
+        "https://unsplash.com/photos/6anudmpILw4",
+        "https://unsplash.com/photos/s9CC2SKySJM"
+      ]
+    },
+    {
+      "firstName": "Sophia",
+      "lastName": "Williams",
+      "email": "sophiaw@example.com",
+      "phoneNumber": "567890123456789",
+      "dateOfBirth": "1995-07-20",
+      "maritalStatus": "Divorced",
+      "gender": "Female",
+      "joinDate": "2020-12-15",
+      "nationality": "British",
+      "address": "789 Pine Court",
+      "city": "London",
+      "state": "ENG",
+      "department": "Marketing",
+      "roleType": "Remote",
+      "avatar": "https://unsplash.com/photos/8zvB-zQf_Jk",
+      "documents": [
+        "https://unsplash.com/photos/pWAjbxwx8mc",
+        "https://unsplash.com/photos/tSE4tUxjx2g",
+        "https://unsplash.com/photos/jzY0KRJopEI"
+      ]
+    },
+    {
+      "firstName": "Noah",
+      "lastName": "Brown",
+      "email": "noahb@example.com",
+      "phoneNumber": "234567890123456",
+      "dateOfBirth": "1992-03-18",
+      "maritalStatus": "Single",
+      "gender": "Male",
+      "joinDate": "2023-01-25",
+      "nationality": "Australian",
+      "address": "101 Maple Drive",
+      "city": "Sydney",
+      "state": "NSW",
+      "department": "HR",
+      "roleType": "Onsite",
+      "avatar": "https://unsplash.com/photos/aWXVxy8BSzc",
+      "documents": [
+        "https://unsplash.com/photos/MCrn5yPHbKc",
+        "https://unsplash.com/photos/qIRNYPk9rKc",
+        "https://unsplash.com/photos/GGz_i_LLU2E"
+      ]
+    }
+  ]
+  

@@ -4,6 +4,10 @@ import dotenv from "dotenv";
 const cors = require("cors"); // Import cors
 import connectDatabase from "./configs/db"; // Import connectDatabase with ESModule syntax
 const cloudinary = require("cloudinary").v2;
+import authRoutes from "./routes/authRoutes";
+import employeeRoutes from "./routes/employeeRoutes";
+import attendanceRoutes from "./routes/attendanceRoutes";
+import projectRoutes from "./routes/projectRoutes";
 
 // Load environment variables
 dotenv.config();
@@ -33,10 +37,10 @@ app.use(express.json());
 
 // Routes
 
-app.use("/api/v1/", require("./routes/employeeRoutes"));
-app.use("/api/v1/", require("./routes/attendanceRoutes"));
-app.use("/api/v1/", require("./routes/projectRoutes"));
-
+app.use("/api/v1", authRoutes);
+app.use("/api/v1", employeeRoutes);
+app.use("/api/v1", attendanceRoutes);
+app.use("/api/v1", projectRoutes);
 // Error handler middleware
 app.use(errorHandler);
 
