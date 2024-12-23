@@ -76,37 +76,56 @@ const addEmployee = asyncHandler(async (req: Request, res: Response) => {
 });
 
 const getEmployees = asyncHandler(async (req: Request, res: Response) => {
-    const page = parseInt(req.query.page as string) || 1;
-    const pageSize = parseInt(req.query.pageSize as string) || 10;
-  
-    // Build filter based on allowed fields (e.g., department)
-    const filterFields = ["department"];
-    const filter = buildFilter(req.query, filterFields);
-  
-    // Fetch paginated and filtered employees with only the required fields
-    const result = await paginateQuery(employeeModel, filter, page, pageSize);
-  
-    // Map the result to return only the specified fields
-    const employees = result.data.map((employee) => ({
-        id: employee.id,
-      firstName: employee.firstName,
-      lastName: employee.lastName,
-      email: employee.email,
-      department: employee.department,
-    }));
-  
-    // Respond with data and pagination info
-    res.status(200).json({
-      status: "success",
-      message: "Employees retrieved successfully",
-      data: employees,
-      pagination: {
-        totalItems: result.totalItems,
-        totalPages: result.totalPages,
-        currentPage: result.currentPage,
-      },
-    });
+  const page = parseInt(req.query.page as string) || 1;
+  const pageSize = parseInt(req.query.pageSize as string) || 10;
+
+  // Build filter based on allowed fields (e.g., department)
+  const filterFields = ["department"];
+  const filter = buildFilter(req.query, filterFields);
+
+  // Initialize a variable to store total employees in the filtered department
+  let totalInDepartment = null;
+
+  // Check if the department filter is applied
+  if (filter.department) {
+    totalInDepartment = await employeeModel.countDocuments({ department: filter.department });
+  }
+
+  // Fetch paginated and filtered employees with only the required fields
+  const result = await paginateQuery(employeeModel, filter, page, pageSize);
+
+  // Map the result to return only the specified fields
+  const employees = result.data.map((employee) => ({
+    id: employee.id,
+    firstName: employee.firstName,
+    lastName: employee.lastName,
+    email: employee.email,
+    department: employee.department,
+  }));
+
+  // Structure the response with the department name as the key
+  const data = filter.department
+    ? {
+      totalInDepartment,
+        [filter.department]: employees
+        
+      }
+    : { employees };
+
+  // Respond with data, pagination info, and total employees in the department (if filtered)
+  res.status(200).json({
+    status: "success",
+    message: "Employees retrieved successfully",
+    data,
+    pagination: {
+      totalItems: result.totalItems,
+      totalPages: result.totalPages,
+      currentPage: result.currentPage,
+    },
   });
+});
+
+
   
 
 const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {

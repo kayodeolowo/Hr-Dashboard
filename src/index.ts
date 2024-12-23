@@ -35,6 +35,7 @@ app.use(express.json());
 
 app.use("/api/v1/", require("./routes/employeeRoutes"));
 app.use("/api/v1/", require("./routes/attendanceRoutes"));
+app.use("/api/v1/", require("./routes/projectRoutes"));
 
 // Error handler middleware
 app.use(errorHandler);
