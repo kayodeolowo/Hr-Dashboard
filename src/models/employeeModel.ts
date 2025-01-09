@@ -4,6 +4,8 @@ import { EmployeeTypes } from '../interface/employee.interface';
 // Define the interface for the User model
 
 
+
+
 // Create the Mongoose schema
 const employeeSchema: Schema = new Schema(
   {

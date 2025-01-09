@@ -5,45 +5,62 @@ import projectModel from "../models/projectModel";
 import employeeModel from "../models/employeeModel";
 import { paginateQuery } from "../helpers/paginate";
 import { sendSuccessResponse } from "../utils/sendSuccessResponse";
+import { addProjectSchema } from "../validators/project.validators";
 
 const addProject = asyncHandler(async (req: Request, res: Response) => {
-    // Get employee ID from the request body instead of params
-    const { projectName, startDate, finishDate, status, employeeId } = req.body;
-  
-    // Validate employee ID format
-    if (!mongoose.Types.ObjectId.isValid(employeeId)) {
+
+    // Validate request body with Joi schema
+    const { error } = addProjectSchema.validate(req.body, { abortEarly: false });
+    if (error) {
       res.status(400);
-      throw new Error("Invalid employee ID.");
+      throw new Error(error.details.map((err) => err.message).join(", "));
     }
+
+    
+  const { projectName, startDate, finishDate, status, employeeId } = req.body;
+
   
-    // Find the employee by _id
-    const employee = await employeeModel.findById(employeeId);
-    if (!employee) {
-      res.status(404);
-      throw new Error("Employee not found.");
-    }
-  
-    // Validate required fields
-    if (!projectName || !startDate || !finishDate || !status) {
-      res.status(400);
-      throw new Error("All project fields are required.");
-    }
-  
-    // Create a new project for the employee
-    const projectData = {
-      projectName,
-      startDate,
-      finishDate,
-      status,
-      employeeId: employee._id,
-    };
-  
-    // Save the project to the database
-    const newProject = await projectModel.create(projectData);
-  
-    sendSuccessResponse(res, "Projects added successfully", {
-      data: newProject,
-    });
+
+  const [startDay, startMonth, startYear] = startDate.split("-").map(Number);
+  const [finishDay, finishMonth, finishYear] = finishDate.split("-").map(Number);
+
+  const start = new Date(startYear, startMonth - 1, startDay);
+  const finish = new Date(finishYear, finishMonth - 1, finishDay);
+
+  if (finish <= start) {
+    res.status(400);
+    throw new Error("Finish Date must be later than Start Date.");
+  }
+
+
+
+  // Check if employee ID is valid and exists in the database
+  if (!mongoose.Types.ObjectId.isValid(employeeId)) {
+    res.status(400);
+    throw new Error("Invalid employee ID.");
+  }
+
+  const employee = await employeeModel.findById(employeeId);
+  if (!employee) {
+    res.status(404);
+    throw new Error("Employee not found.");
+  }
+
+  // Create a new project for the employee
+  const projectData = {
+    projectName,
+    startDate,
+    finishDate,
+    status,
+    employeeId: employee._id,
+  };
+
+  // Save the project to the database
+  const newProject = await projectModel.create(projectData);
+
+  sendSuccessResponse(res, "Project added successfully", {
+    data: newProject,
+  });
 });
 
 // GET request keeps the id in the URL

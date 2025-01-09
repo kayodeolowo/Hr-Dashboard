@@ -7,7 +7,7 @@ const projectSchema = new Schema<ProjectDocument>({
   projectName: { type: String, required: true },
   startDate: { type: Date, required: true },
   finishDate: { type: Date, required: true },
-  status: { type: String, enum: ["Completed", "In progress"], required: true },
+  status: { type: String, enum: ["Completed", "Pending", "In Progress"], required: true },
   employeeId: { type: mongoose.Schema.Types.ObjectId, ref: "Employee", required: true }, 
 });
 

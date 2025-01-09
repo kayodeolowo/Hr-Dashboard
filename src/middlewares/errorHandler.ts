@@ -7,6 +7,7 @@ interface CustomError extends Error {
 
 const errorHandler = (err: CustomError, req: Request, res: Response, next: NextFunction): void => {
   const statusCode: number = res.statusCode ? res.statusCode : 500;
+  
   res.status(statusCode);
 
   switch (statusCode) {

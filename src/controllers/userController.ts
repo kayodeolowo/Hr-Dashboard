@@ -4,6 +4,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/userModel";
 import { sendSuccessResponse } from "../utils/sendSuccessResponse";
+import { registerUserSchema } from "../validators/userSignUp.validators";
+import { loginUserSchema } from "../validators/userlogin.validators";
 
 // Define custom Request types for user data
 interface UserRequest extends Request {
@@ -60,6 +62,11 @@ const updateProfile = asyncHandler(async (req: UserRequest, res: Response) => {
 
 // Login user
 const loginUser = asyncHandler(async (req: Request, res: Response) => {
+  const { error } = loginUserSchema.validate(req.body, { abortEarly: false });
+  if (error) {
+    res.status(400);
+    throw new Error(error.details.map((err) => err.message).join(", "));
+  }
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -101,6 +108,11 @@ const loginUser = asyncHandler(async (req: Request, res: Response) => {
 
 // Register user
 const registerUser = asyncHandler(async (req: Request, res: Response) => {
+  const { error } = registerUserSchema.validate(req.body, { abortEarly: false });
+  if (error) {
+    res.status(400);
+    throw new Error(error.details.map((err) => err.message).join(", "));
+  }
   const { email, lastName, firstName, password, confirmPassword, username } = req.body;
 
   if (!email || !password || !firstName || !lastName || !username) {

@@ -4,6 +4,9 @@ interface PaginatedResult<T> {
   totalItems: number;
   totalPages: number;
   currentPage: number;
+  pageSize: number;
+  hasPrev: boolean;
+  hasNext: boolean;
   data: T[];
 }
 
@@ -25,10 +28,17 @@ export const paginateQuery = async <T extends Document>(
   // Calculate total pages
   const totalPages = Math.ceil(totalItems / pageSize);
 
+  // Check if there's a previous or next page
+  const hasPrev = page > 1;
+  const hasNext = page < totalPages;
+
   return {
     totalItems,
     totalPages,
     currentPage: page,
+    pageSize,
+    hasPrev,
+    hasNext,
     data,
   };
 };

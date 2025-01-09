@@ -6,9 +6,19 @@ import { paginateQuery } from "../helpers/paginate";
 import { validateAndFormatDate } from "../helpers/dateValidator";
 import { generateUniqueEmployeeId } from "../helpers/uniqueEmployeeId";
 import mongoose from "mongoose";
+import { sendSuccessResponse } from "../utils/sendSuccessResponse";
+import { employeeSchema } from "../validators/employee.validators";
+
 
 // Add a new Employee
 const addEmployee = asyncHandler(async (req: Request, res: Response) => {
+  // Validate the request body
+  const { error, value } = employeeSchema.validate(req.body, { abortEarly: false });
+  if (error) {
+    res.status(400);
+    throw new Error(error.details.map((err) => err.message).join(", "));
+  }
+
   const {
     avatar,
     firstName,
@@ -26,7 +36,7 @@ const addEmployee = asyncHandler(async (req: Request, res: Response) => {
     department,
     joinDate,
     roleType,
-  } = req.body;
+  } = value; // Use the validated and sanitized values
 
   // Check for duplicate email
   const existingEmployee = await employeeModel.findOne({ email });
@@ -43,8 +53,7 @@ const addEmployee = asyncHandler(async (req: Request, res: Response) => {
   }
 
   const employeeId = await generateUniqueEmployeeId();
-  const formattedDateOfBirth = validateAndFormatDate(dateOfBirth);
-  const formattedJoinDate = validateAndFormatDate(joinDate);
+  
 
   // Create a new employee
   const employee = await employeeModel.create({
@@ -55,7 +64,7 @@ const addEmployee = asyncHandler(async (req: Request, res: Response) => {
     phoneNumber,
     documents,
     employeeId,
-    dateOfBirth: formattedDateOfBirth,
+    dateOfBirth,
     maritalStatus,
     gender,
     nationality,
@@ -63,7 +72,7 @@ const addEmployee = asyncHandler(async (req: Request, res: Response) => {
     city,
     state,
     department,
-    joinDate: formattedJoinDate,
+    joinDate,
     roleType,
   });
 
@@ -74,6 +83,8 @@ const addEmployee = asyncHandler(async (req: Request, res: Response) => {
     data: employee,
   });
 });
+
+
 
 
 // get all employees
@@ -106,23 +117,24 @@ const getEmployees = asyncHandler(async (req: Request, res: Response) => {
   }));
 
   // Structure the response with the department name as the key
-  const data = filter.department
+  const all_employees = filter.department
     ? {
       totalInDepartment,
         [filter.department]: employees
         
       }
-    : { employees };
+    :  employees ;
 
   // Respond with data, pagination info, and total employees in the department (if filtered)
-  res.status(200).json({
-    status: "success",
-    message: "Employees retrieved successfully",
-    data,
-    pagination: {
+    sendSuccessResponse(res, "Employees retrieved successfully", {
+      all_employees,
+     pagination: {
       totalItems: result.totalItems,
       totalPages: result.totalPages,
       currentPage: result.currentPage,
+      pageSize: result.pageSize,
+      hasPrev: result.hasPrev,
+      hasNext: result.hasNext,
     },
   });
 });
