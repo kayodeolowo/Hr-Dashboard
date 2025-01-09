@@ -10,9 +10,9 @@ const router = express.Router();
 // Apply validateToken to all routes
 router.use(validateToken);
 
-router.post("/addEmployee", addEmployee);
-router.get("/employees", getEmployees);
-router.get("/employee/:id", getEmployeeById);
-router.put("/employee/:id", updateEmployee);
+router.post("/add", addEmployee);
+router.get("/all", getEmployees);
+router.get("/:id", getEmployeeById);
+router.put("/:id", updateEmployee);
 
 export default router;

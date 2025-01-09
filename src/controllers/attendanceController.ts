@@ -4,6 +4,7 @@ import employeeModel from "../models/employeeModel";
 import mongoose from "mongoose";
 import attendanceModel from "../models/attendanceModel"
 import { paginateQuery } from '../helpers/paginate';
+import { sendSuccessResponse } from "../utils/sendSuccessResponse";
 
 // Helper function to validate and convert time strings like '07:00' or '22:00'
 const validateAndParseTime = (time: string) => {
@@ -90,9 +91,7 @@ const addAttendance = asyncHandler(async (req: Request, res: Response) => {
   // Save the attendance data
   const newAttendance = await attendanceModel.create(attendanceData);
 
-  res.status(201).json({
-    status: "success",
-    message: "Attendance added successfully",
+  sendSuccessResponse(res, "Attendance added successfully", {
     data: newAttendance,
   });
 });
@@ -113,8 +112,7 @@ const addAttendance = asyncHandler(async (req: Request, res: Response) => {
     }
   
     // Respond with paginated attendance records
-    res.status(200).json({
-      status: "success",
+    sendSuccessResponse(res, "Attendance records retrieved successfully", {
       data: paginatedAttendance.data,
       totalItems: paginatedAttendance.totalItems,
       totalPages: paginatedAttendance.totalPages,
@@ -146,8 +144,7 @@ const addAttendance = asyncHandler(async (req: Request, res: Response) => {
     }
   
     // Respond with paginated employee's attendance records
-    res.status(200).json({
-      status: "success",
+    sendSuccessResponse(res, "Attendance record retrieved successfully", {
       data: paginatedAttendance.data,
       totalItems: paginatedAttendance.totalItems,
       totalPages: paginatedAttendance.totalPages,

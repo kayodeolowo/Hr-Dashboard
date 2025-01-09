@@ -75,6 +75,8 @@ const addEmployee = asyncHandler(async (req: Request, res: Response) => {
   });
 });
 
+
+// get all employees
 const getEmployees = asyncHandler(async (req: Request, res: Response) => {
   const page = parseInt(req.query.page as string) || 1;
   const pageSize = parseInt(req.query.pageSize as string) || 10;

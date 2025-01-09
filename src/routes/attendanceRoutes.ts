@@ -7,9 +7,9 @@ import { validateToken } from '../middlewares/validateToken';
 const router = express.Router();
 
 router.use(validateToken);
-router.route("/addAttendance").post(addAttendance);
-router.route("/allAttendance").get(getAllAttendance);
-router.route("/employeeAttendance/:id").get(getEmployeeAttendance);
+router.route("/add").post(addAttendance);
+router.route("/all").get(getAllAttendance);
+router.route("/:id").get(getEmployeeAttendance);
 
 
 

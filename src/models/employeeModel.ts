@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { EmployeeTypes } from './Types';
+import { EmployeeTypes } from '../interface/employee.interface';
 
 // Define the interface for the User model
 

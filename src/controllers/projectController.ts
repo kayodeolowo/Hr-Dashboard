@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import projectModel from "../models/projectModel";
 import employeeModel from "../models/employeeModel";
 import { paginateQuery } from "../helpers/paginate";
+import { sendSuccessResponse } from "../utils/sendSuccessResponse";
 
 const addProject = asyncHandler(async (req: Request, res: Response) => {
     // Get employee ID from the request body instead of params
@@ -40,9 +41,7 @@ const addProject = asyncHandler(async (req: Request, res: Response) => {
     // Save the project to the database
     const newProject = await projectModel.create(projectData);
   
-    res.status(201).json({
-      status: "success",
-      message: "Project added successfully",
+    sendSuccessResponse(res, "Projects added successfully", {
       data: newProject,
     });
 });
@@ -72,10 +71,8 @@ const getEmployeeProjects = asyncHandler(async (req: Request, res: Response) => 
   }
 
   // Send the paginated result in the response
-  res.status(200).json({
-    status: "success",
-    message: "Projects fetched successfully",
-    data: paginatedResult.data,
+  sendSuccessResponse(res, "Projects fetched successfully", {
+    all_projects: paginatedResult.data,
     pagination: {
       totalItems: paginatedResult.totalItems,
       totalPages: paginatedResult.totalPages,

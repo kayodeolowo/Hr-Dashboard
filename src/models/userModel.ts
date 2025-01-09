@@ -1,17 +1,7 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Schema,  Model } from 'mongoose';
+import { UserTypes } from 'interface/user.interface';
 
-// Define the User interface to represent the structure of the document
-interface IUser extends Document {
-  username: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
-
-// Define the User schema
-const userSchema: Schema<IUser> = new Schema<IUser>(
+const userSchema: Schema<UserTypes> = new Schema<UserTypes>(
   {
     username: {
       type: String,
@@ -45,5 +35,5 @@ const userSchema: Schema<IUser> = new Schema<IUser>(
 );
 
 // Export the Mongoose model
-const User: Model<IUser> = mongoose.model<IUser>('User', userSchema);
+const User: Model<UserTypes> = mongoose.model<UserTypes>('User', userSchema);
 export default User;

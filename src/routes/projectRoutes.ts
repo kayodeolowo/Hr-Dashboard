@@ -9,8 +9,8 @@ router.use(validateToken);
 
 
 
-router.post("/addProject", addProject);
-router.route("/projects/:id").get(getEmployeeProjects);
+router.post("/add", addProject);
+router.route("/:id").get(getEmployeeProjects);
 
 
 export default router;

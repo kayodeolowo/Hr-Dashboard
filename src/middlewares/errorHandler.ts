@@ -12,7 +12,7 @@ const errorHandler = (err: CustomError, req: Request, res: Response, next: NextF
   switch (statusCode) {
     case constants.VALIDATION_ERROR:
       res.json({
-        status: 'error',
+        success: false,
         title: 'Validation failed',
         message: err.message,
         // stackTrace: err.stack,
@@ -21,7 +21,7 @@ const errorHandler = (err: CustomError, req: Request, res: Response, next: NextF
 
     case constants.NOT_FOUND:
       res.json({
-        status: 'error',
+        success: false,
         title: 'Not found',
         message: err.message,
         // stackTrace: err.stack,
@@ -30,7 +30,7 @@ const errorHandler = (err: CustomError, req: Request, res: Response, next: NextF
 
     case constants.UNAUTHORIZED:
       res.json({
-        status: 'error',
+        success: false,
         title: 'Unauthorized',
         message: err.message,
         // stackTrace: err.stack,
@@ -39,7 +39,7 @@ const errorHandler = (err: CustomError, req: Request, res: Response, next: NextF
 
     case constants.FORBIDDEN:
       res.json({
-        status: 'error',
+        success: false,
         title: 'Forbidden',
         message: err.message,
         // stackTrace: err.stack,
@@ -48,7 +48,7 @@ const errorHandler = (err: CustomError, req: Request, res: Response, next: NextF
 
     case constants.SERVER_ERROR:
       res.json({
-        status: 'error',
+        success: false,
         title: 'Server Error',
         message: err.message,
         // stackTrace: err.stack,
@@ -57,7 +57,7 @@ const errorHandler = (err: CustomError, req: Request, res: Response, next: NextF
 
     default:
       res.json({
-        status: 'error',
+        success: false,
         title: 'Error',
         message: err.message,
         // stackTrace: err.stack,

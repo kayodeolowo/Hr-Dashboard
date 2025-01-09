@@ -1,14 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { AttendanceDocument } from "interface/attendance.interface";
 
-// Define the Attendance schema
-interface AttendanceDocument extends Document {
-  employeeId: mongoose.Types.ObjectId; // Reference to employee
-  date: Date;
-  checkInTime: Date;
-  checkOutTime: Date;
-  workingHours: number;
-  status: string;
-}
 
 // Create the Attendance schema
 const attendanceSchema = new Schema<AttendanceDocument>({

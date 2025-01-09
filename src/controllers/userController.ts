@@ -3,6 +3,7 @@ import asyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/userModel";
+import { sendSuccessResponse } from "../utils/sendSuccessResponse";
 
 // Define custom Request types for user data
 interface UserRequest extends Request {
@@ -83,9 +84,7 @@ const loginUser = asyncHandler(async (req: Request, res: Response) => {
       { expiresIn: "500000000m" }
     );
 
-    res.status(200).json({
-      status: "success",
-      message: "User data retrieved",
+     sendSuccessResponse(res, "Login successfully", {
       user: {
         id: user.id,
         email: user.email,
@@ -137,7 +136,7 @@ const registerUser = asyncHandler(async (req: Request, res: Response) => {
   });
 
   if (user) {
-    res.status(201).json({
+    sendSuccessResponse(res, "Signup successfull", {
       id: user.id,
       email: user.email,
       lastName: user.lastName,

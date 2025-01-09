@@ -1,16 +1,9 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
+import { PropertyTypes } from 'interface/property.intrface';
 
-// Define an interface for the Property model
-interface IProperty extends Document {
-  property_name: string;
-  address: string;
-  price: number;
-  property_type: 'House' | 'Condo' | 'Apartment' | 'Land';
-  image: string;
-}
 
 // Define the schema with proper types
-const propertySchema: Schema<IProperty> = new mongoose.Schema(
+const propertySchema: Schema<PropertyTypes> = new mongoose.Schema(
   {
     property_name: {
       type: String,
@@ -40,6 +33,6 @@ const propertySchema: Schema<IProperty> = new mongoose.Schema(
 );
 
 // Create and export the Property model with proper typing
-const Property: Model<IProperty> = mongoose.model<IProperty>('Property', propertySchema);
+const Property: Model<PropertyTypes> = mongoose.model<PropertyTypes>('Property', propertySchema);
 
 export default Property;

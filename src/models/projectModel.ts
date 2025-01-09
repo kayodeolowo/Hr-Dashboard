@@ -1,13 +1,6 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema } from "mongoose";
+import { ProjectDocument } from "interface/project.interface.types";
 
-// Define the Project schema
-interface ProjectDocument extends Document {
-  projectName: string;
-  startDate: Date;
-  finishDate: Date;
-  status: "Completed" | "In progress";
-  employeeId: mongoose.Types.ObjectId; 
-}
 
 
 const projectSchema = new Schema<ProjectDocument>({
