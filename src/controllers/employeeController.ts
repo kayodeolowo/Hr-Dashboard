@@ -12,7 +12,6 @@ import { employeeSchema } from "../validators/employee.validators";
 
 // Add a new Employee
 const addEmployee = asyncHandler(async (req: Request, res: Response) => {
-  // Validate the request body
   const { error, value } = employeeSchema.validate(req.body, { abortEarly: false });
   if (error) {
     res.status(400);
@@ -36,16 +35,15 @@ const addEmployee = asyncHandler(async (req: Request, res: Response) => {
     department,
     joinDate,
     roleType,
-  } = value; // Use the validated and sanitized values
+  } = value; 
 
-  // Check for duplicate email
+  
   const existingEmployee = await employeeModel.findOne({ email });
   if (existingEmployee) {
     res.status(400);
     throw new Error("An employee with this email already exists.");
   }
 
-  // Check for duplicate phone number
   const existingPhoneNumber = await employeeModel.findOne({ phoneNumber });
   if (existingPhoneNumber) {
     res.status(400);
@@ -55,7 +53,6 @@ const addEmployee = asyncHandler(async (req: Request, res: Response) => {
   const employeeId = await generateUniqueEmployeeId();
   
 
-  // Create a new employee
   const employee = await employeeModel.create({
     avatar,
     firstName,
@@ -76,7 +73,6 @@ const addEmployee = asyncHandler(async (req: Request, res: Response) => {
     roleType,
   });
 
-  // Respond with success
   res.status(201).json({
     status: "success",
     message: "Employee added successfully",
@@ -110,10 +106,14 @@ const getEmployees = asyncHandler(async (req: Request, res: Response) => {
   // Map the result to return only the specified fields
   const employees = result.data.map((employee) => ({
     id: employee.id,
+    avatar: employee.avatar,
     firstName: employee.firstName,
     lastName: employee.lastName,
     email: employee.email,
     department: employee.department,
+    employeeId: employee.employeeId,
+    roleType: employee.roleType,
+    jobStatus: employee.jobStatus,
   }));
 
   // Structure the response with the department name as the key

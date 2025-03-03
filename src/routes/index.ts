@@ -3,6 +3,7 @@ import authRoutes from "./authRoutes";
 import employeeRoutes from "./employeeRoutes";
 import attendanceRoutes from "./attendanceRoutes";
 import projectRoutes from "./projectRoutes";
+import uploadRoutes from "./uploadRoutes";
 
 const router = Router();
 
@@ -11,5 +12,6 @@ router.use("/auth", authRoutes);
 router.use("/employees", employeeRoutes);
 router.use("/attendance", attendanceRoutes);
 router.use("/projects", projectRoutes);
+router.use("/upload",  uploadRoutes);
 
 export default router;

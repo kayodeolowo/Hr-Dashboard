@@ -6,7 +6,7 @@ import morgan from 'morgan';
 const colors: { [key: string]: string } = {
   error: 'red',
   warn: 'yellow',
-  info: 'green',
+  info: 'blue',
   http: 'magenta',
   debug: 'orange',
 };

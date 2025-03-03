@@ -91,7 +91,7 @@ const loginUser = asyncHandler(async (req: Request, res: Response) => {
       { expiresIn: "500000000m" }
     );
 
-     sendSuccessResponse(res, "Login successfully", {
+     sendSuccessResponse(res, "Login successfull", {
       user: {
         id: user.id,
         email: user.email,

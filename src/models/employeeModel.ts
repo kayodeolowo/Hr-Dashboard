@@ -1,12 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { EmployeeTypes } from '../interface/employee.interface';
 
-// Define the interface for the User model
 
-
-
-
-// Create the Mongoose schema
 const employeeSchema: Schema = new Schema(
   {
     avatar: {
@@ -41,6 +36,7 @@ const employeeSchema: Schema = new Schema(
       required: [true, "Phone number is required"],
       match: [/^\d{10,15}$/, "Phone number must be between 10 and 15 digits"],
     },
+    
     dateOfBirth: {
       type: Date,
       required: [true, "Date of birth is required"],
@@ -55,12 +51,39 @@ const employeeSchema: Schema = new Schema(
       required: [true, "Gender is required"],
       enum: ["Male", "Female", "Other"],
     },
+
+
+    nationality: {
+      type: String,
+      required: [true, "Nationality is required"],
+      trim: true,
+    },
+
+    address: {
+      type: String,
+      required: [true, "Address is required"],
+      trim: true,
+    },
+
+    state: {
+      type: String,
+      required: [true, "State is required"],
+      trim: true,
+    },
     
     department: {
         type: String,
         required: [true, "Department is required"],
         enum: ["IT", "Engineering", "Design"],
       },
+
+
+      jobStatus: {
+        type: String,
+        required: [true, "Role Type is required"],
+        enum: ["Permanent", "Contract"],
+      },
+
 
       roleType: {
         type: String,
@@ -79,26 +102,8 @@ const employeeSchema: Schema = new Schema(
         default: [], // Default to an empty array if no documents are provided
       },
 
-    nationality: {
-      type: String,
-      required: [true, "Nationality is required"],
-      trim: true,
-    },
-    address: {
-      type: String,
-      required: [true, "Address is required"],
-      trim: true,
-    },
-    city: {
-      type: String,
-      required: [true, "City is required"],
-      trim: true,
-    },
-    state: {
-      type: String,
-      required: [true, "State is required"],
-      trim: true,
-    },
+ 
+
 
     attendance: [{ // Define attendance as an array of objects
       date: { type: Date, required: true },

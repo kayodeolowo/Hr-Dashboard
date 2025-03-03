@@ -22,8 +22,10 @@ app.use(helmet());
 // Enable CORS for all routes
 app.use(
   cors({
+    origin: "http://localhost:3000",
     methods: "GET,POST,PUT,DELETE,PATCH,OPTIONS",
     allowedHeaders: "Content-Type,Authorization",
+    
   })
 );
 
