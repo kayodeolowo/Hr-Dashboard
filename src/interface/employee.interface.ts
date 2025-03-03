@@ -22,7 +22,7 @@ export interface EmployeeTypes extends Document {
   address: string;
   city: string;
   state: string;
-  department: string;
+  department?: { _id: string; name: string } | null;
   employeeId: string;
   documents: string[];
   attendance: Attendance[]; 

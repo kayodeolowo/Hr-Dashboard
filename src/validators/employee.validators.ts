@@ -116,14 +116,15 @@ export const employeeSchema = Joi.object({
       "string.min": "State must not be empty",
     }),
 
-  department: Joi.string()
-    .min(1)
+    department: Joi.string()
     .required()
+    .regex(/^[0-9a-fA-F]{24}$/)
     .messages({
-      "any.required": "Department is required",
-      "string.empty": "Department is required",
-      "string.min": "Department must not be empty",
+      "any.required": "Department ID is required",
+      "string.empty": "Department ID is required",
+      "string.pattern.base": "Department ID must be a valid MongoDB ObjectID",
     }),
+
 
   joinDate: Joi.string()
     .pattern(/^\d{2}-\d{2}-\d{4}$/)
@@ -141,5 +142,15 @@ export const employeeSchema = Joi.object({
       "any.required": "Role type is required",
       "string.empty": "Role type is required",
       "string.min": "Role type must not be empty",
+    }),
+
+
+    jobStatus: Joi.string()
+    .min(1)
+    .required()
+    .messages({
+      "any.required": "Job status is required",
+      "string.empty": "Job status is required",
+      "string.min": "Job status must not be empty",
     }),
 });

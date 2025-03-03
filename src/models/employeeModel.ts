@@ -72,15 +72,16 @@ const employeeSchema: Schema = new Schema(
     },
     
     department: {
-        type: String,
-        required: [true, "Department is required"],
-        enum: ["IT", "Engineering", "Design"],
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Department',
+      required: [true, "Department ID is required"],
+    },
 
+      
 
       jobStatus: {
         type: String,
-        required: [true, "Role Type is required"],
+        required: [true, "Job Status is required"],
         enum: ["Permanent", "Contract"],
       },
 

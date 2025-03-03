@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import asyncHandler from "express-async-handler";
 import employeeModel from "../models/employeeModel";
-import { buildFilter } from "../helpers/filter";
 import { paginateQuery } from "../helpers/paginate";
 import { validateAndFormatDate } from "../helpers/dateValidator";
 import { generateUniqueEmployeeId } from "../helpers/uniqueEmployeeId";
 import mongoose from "mongoose";
 import { sendSuccessResponse } from "../utils/sendSuccessResponse";
 import { employeeSchema } from "../validators/employee.validators";
+import { departmentModel } from "../models/departmentModel";
 
 
 // Add a new Employee
@@ -35,6 +35,7 @@ const addEmployee = asyncHandler(async (req: Request, res: Response) => {
     department,
     joinDate,
     roleType,
+    jobStatus
   } = value; 
 
   
@@ -49,6 +50,14 @@ const addEmployee = asyncHandler(async (req: Request, res: Response) => {
     res.status(400);
     throw new Error("An employee with this phone number already exists.");
   }
+
+
+  const departmentExists = await departmentModel.findById(department);
+  if (!departmentExists) {
+    res.status(400);
+    throw new Error("Department not found with the provided ID.");
+  }
+
 
   const employeeId = await generateUniqueEmployeeId();
   
@@ -71,6 +80,7 @@ const addEmployee = asyncHandler(async (req: Request, res: Response) => {
     department,
     joinDate,
     roleType,
+    jobStatus
   });
 
   res.status(201).json({
@@ -83,52 +93,82 @@ const addEmployee = asyncHandler(async (req: Request, res: Response) => {
 
 
 
+
+
+  
+const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params; // Extract `_id` from URL params
+  
+  // Validate `_id` format
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    res.status(400);
+    throw new Error("Invalid employee ID.");
+  }
+  
+  // Fetch the employee by `_id` and populate the department field
+  const employee = await employeeModel.findById(id).populate({
+    path: 'department',
+    select: '_id name' // Only select the fields you need from department
+  });
+  
+  if (!employee) {
+    res.status(404);
+    throw new Error("Employee not found.");
+  }
+  
+  // Use the sendSuccessResponse utility for consistency
+  sendSuccessResponse(res, "Employee retrieved successfully", {
+    data: employee
+  });
+});
+
+
+
 // get all employees
 const getEmployees = asyncHandler(async (req: Request, res: Response) => {
   const page = parseInt(req.query.page as string) || 1;
   const pageSize = parseInt(req.query.pageSize as string) || 10;
 
-  // Build filter based on allowed fields (e.g., department)
-  const filterFields = ["department"];
-  const filter = buildFilter(req.query, filterFields);
+  // Fetch paginated employees
+  const result = await paginateQuery(
+    employeeModel,
+    {},
+    page,
+    pageSize
+  );
+  
+  // Populate department information for each employee
+  await Promise.all(
+    result.data.map(async (employee) => {
+      if (employee.department) {
+        await employee.populate('department');
+      }
+      return employee;
+    })
+  );
 
-  // Initialize a variable to store total employees in the filtered department
-  let totalInDepartment = null;
-
-  // Check if the department filter is applied
-  if (filter.department) {
-    totalInDepartment = await employeeModel.countDocuments({ department: filter.department });
-  }
-
-  // Fetch paginated and filtered employees with only the required fields
-  const result = await paginateQuery(employeeModel, filter, page, pageSize);
-
-  // Map the result to return only the specified fields
+  // Map the result to include department name and ID
   const employees = result.data.map((employee) => ({
     id: employee.id,
     avatar: employee.avatar,
     firstName: employee.firstName,
     lastName: employee.lastName,
     email: employee.email,
-    department: employee.department,
+    department: employee.department 
+      ? {
+          id: employee.department._id,
+          name: employee.department.name,
+        } 
+      : null,
     employeeId: employee.employeeId,
     roleType: employee.roleType,
     jobStatus: employee.jobStatus,
   }));
 
-  // Structure the response with the department name as the key
-  const all_employees = filter.department
-    ? {
-      totalInDepartment,
-        [filter.department]: employees
-        
-      }
-    :  employees ;
-
-  // Respond with data, pagination info, and total employees in the department (if filtered)
-    sendSuccessResponse(res, "Employees retrieved successfully", {
-      all_employees,
-     pagination: {
+  // Respond with data and pagination info
+  sendSuccessResponse(res, "Employees retrieved successfully", {
+    employees,
+    pagination: {
       totalItems: result.totalItems,
       totalPages: result.totalPages,
       currentPage: result.currentPage,
@@ -139,32 +179,6 @@ const getEmployees = asyncHandler(async (req: Request, res: Response) => {
   });
 });
 
-
-  
-
-const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
-  const { id } = req.params; // Extract `_id` from URL params
-
-  // Validate `_id` format
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    res.status(400);
-    throw new Error("Invalid employee ID.");
-  }
-
-  // Fetch the employee by `_id`
-  const employee = await employeeModel.findById(id);
-  if (!employee) {
-    res.status(404);
-    throw new Error("Employee not found.");
-  }
-
-  // Respond with the employee data
-  res.status(200).json({
-    status: "success",
-    message: "Employee retrieved successfully",
-    data: employee,
-  });
-});
 
 const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params; // Extract `_id` from URL params

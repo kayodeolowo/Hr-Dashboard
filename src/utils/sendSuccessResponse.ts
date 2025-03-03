@@ -12,7 +12,6 @@ export const sendSuccessResponse = (
   data?: any,
   statusCode: number = 200
 ): void => {
-  // Check if statusCode is 201 to handle creation responses
   if (statusCode === 201) {
     res.status(201).json({
       success: true,
