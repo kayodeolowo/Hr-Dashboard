@@ -20,10 +20,10 @@ export interface EmployeeTypes extends Document {
   gender: string;
   nationality: string;
   address: string;
-  city: string;
   state: string;
   department?: { _id: string; name: string } | null;
   employeeId: string;
+  employeeWorkEmail: string;
   documents: string[];
   attendance: Attendance[]; 
 }

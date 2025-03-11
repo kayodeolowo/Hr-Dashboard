@@ -30,38 +30,60 @@ const addEmployee = asyncHandler(async (req: Request, res: Response) => {
     gender,
     nationality,
     address,
-    city,
     state,
     department,
     joinDate,
     roleType,
     jobStatus
-  } = value; 
+  } = value;
 
-  
+  // Validate and format date fields
+  let formattedDateOfBirth, formattedJoinDate;
+  try {
+    formattedDateOfBirth = validateAndFormatDate(dateOfBirth);
+    formattedJoinDate = validateAndFormatDate(joinDate);
+  } catch (error: any) {
+    res.status(400);
+    throw new Error(error.message);
+  }
+
+  // Check if email already exists
   const existingEmployee = await employeeModel.findOne({ email });
   if (existingEmployee) {
     res.status(400);
     throw new Error("An employee with this email already exists.");
   }
 
+  // Check if phone number already exists
   const existingPhoneNumber = await employeeModel.findOne({ phoneNumber });
   if (existingPhoneNumber) {
     res.status(400);
     throw new Error("An employee with this phone number already exists.");
   }
 
-
+  // Check if department exists
   const departmentExists = await departmentModel.findById(department);
   if (!departmentExists) {
     res.status(400);
     throw new Error("Department not found with the provided ID.");
   }
 
+  // Generate unique employeeWorkEmail
+  let baseEmail = `${firstName.toLowerCase()}.${lastName.toLowerCase()}@workgrid.com`;
+  let employeeWorkEmail = baseEmail;
+  let emailExists = await employeeModel.findOne({ employeeWorkEmail });
 
+  let count = 1;
+  while (emailExists) {
+    employeeWorkEmail = `${firstName.toLowerCase()}.${lastName.toLowerCase()}${count}@workgrid.com`;
+    emailExists = await employeeModel.findOne({ employeeWorkEmail });
+    count++;
+  }
+
+  // Generate a unique employee ID
   const employeeId = await generateUniqueEmployeeId();
-  
 
+  // Create the employee
   const employee = await employeeModel.create({
     avatar,
     firstName,
@@ -70,25 +92,26 @@ const addEmployee = asyncHandler(async (req: Request, res: Response) => {
     phoneNumber,
     documents,
     employeeId,
-    dateOfBirth,
+    employeeWorkEmail, 
+    dateOfBirth: formattedDateOfBirth,
+    joinDate: formattedJoinDate, 
     maritalStatus,
     gender,
     nationality,
     address,
-    city,
     state,
     department,
-    joinDate,
     roleType,
     jobStatus
   });
 
-  res.status(201).json({
-    status: "success",
-    message: "Employee added successfully",
-    data: employee,
-  });
+
+
+  sendSuccessResponse(res, "Employee added successfully", {
+    data:employee
+ });
 });
+
 
 
 
@@ -118,7 +141,7 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
   
   // Use the sendSuccessResponse utility for consistency
   sendSuccessResponse(res, "Employee retrieved successfully", {
-    data: employee
+     employee
   });
 });
 
@@ -242,12 +265,11 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
     { new: true, runValidators: true } // Return updated document and apply schema validation
   );
 
-  // Respond with success
-  res.status(200).json({
-    status: "success",
-    message: "Employee updated successfully",
-    data: updatedEmployee,
-  });
+ 
+
+  sendSuccessResponse(res, "Employee updated successfully", {
+    data: updatedEmployee
+ });
 });
 
 export { addEmployee, getEmployees, updateEmployee, getEmployeeById };

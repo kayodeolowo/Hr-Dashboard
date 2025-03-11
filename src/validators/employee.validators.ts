@@ -98,14 +98,7 @@ export const employeeSchema = Joi.object({
       "string.min": "Address must not be empty",
     }),
 
-  city: Joi.string()
-    .min(1)
-    .required()
-    .messages({
-      "any.required": "City is required",
-      "string.empty": "City is required",
-      "string.min": "City must not be empty",
-    }),
+
 
   state: Joi.string()
     .min(1)

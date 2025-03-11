@@ -1,13 +1,11 @@
-import mongoose, { Schema, Document } from 'mongoose';
-import { EmployeeTypes } from '../interface/employee.interface';
-
+import mongoose, { Schema, Document } from "mongoose";
+import { EmployeeTypes } from "../interface/employee.interface";
 
 const employeeSchema: Schema = new Schema(
   {
     avatar: {
-      type: String,      
+      type: String,
     },
-
 
     firstName: {
       type: String,
@@ -26,17 +24,16 @@ const employeeSchema: Schema = new Schema(
       match: [/\S+@\S+\.\S+/, "Please enter a valid email"],
     },
 
-    employeeId: { type: String, 
-      unique: true, 
-       },
+    employeeId: { type: String, unique: true },
 
-      
+    employeeWorkEmail: { type: String, unique: true },
+
     phoneNumber: {
       type: String,
       required: [true, "Phone number is required"],
       match: [/^\d{10,15}$/, "Phone number must be between 10 and 15 digits"],
     },
-    
+
     dateOfBirth: {
       type: Date,
       required: [true, "Date of birth is required"],
@@ -51,7 +48,6 @@ const employeeSchema: Schema = new Schema(
       required: [true, "Gender is required"],
       enum: ["Male", "Female", "Other"],
     },
-
 
     nationality: {
       type: String,
@@ -70,56 +66,52 @@ const employeeSchema: Schema = new Schema(
       required: [true, "State is required"],
       trim: true,
     },
-    
+
     department: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Department',
+      ref: "Department",
       required: [true, "Department ID is required"],
     },
 
-      
+    jobStatus: {
+      type: String,
+      required: [true, "Job Status is required"],
+      enum: ["Permanent", "Contract"],
+    },
 
-      jobStatus: {
-        type: String,
-        required: [true, "Job Status is required"],
-        enum: ["Permanent", "Contract"],
+    roleType: {
+      type: String,
+      required: [true, "Role Type is required"],
+      enum: ["Onsite", "Hybrid", "Remote"],
+    },
+
+    joinDate: {
+      type: Date,
+      required: [true, "Date of Joining is required"],
+    },
+
+    documents: {
+      type: [String], // Array of strings to store the URLs
+      default: [], // Default to an empty array if no documents are provided
+    },
+
+    attendance: [
+      {
+        // Define attendance as an array of objects
+        date: { type: Date, required: true },
+        checkInTime: { type: Date, required: true },
+        checkOutTime: { type: Date, required: true },
+        workingHours: {
+          type: Number,
+          required: true, // Include the working hours as a required field
+        },
+        status: {
+          type: String,
+          enum: ["On time", "Late"], // Only allow these two values for status
+          required: true, // Include status as a required field
+        },
       },
-
-
-      roleType: {
-        type: String,
-        required: [true, "Role Type is required"],
-        enum: ["Onsite", "Hybrid", "Remote"],
-      },
-
-
-      joinDate: {
-        type: Date,
-        required: [true, "Date of Joining is required"],
-      },
-
-      documents: {
-        type: [String],  // Array of strings to store the URLs
-        default: [], // Default to an empty array if no documents are provided
-      },
-
- 
-
-
-    attendance: [{ // Define attendance as an array of objects
-      date: { type: Date, required: true },
-      checkInTime: { type: Date, required: true },
-      checkOutTime: { type: Date, required: true },
-      workingHours: {
-        type: Number,
-        required: true,  // Include the working hours as a required field
-      },
-      status: {
-        type: String,
-        enum: ['On time', 'Late'],  // Only allow these two values for status
-        required: true,  // Include status as a required field
-      },
-    }],
+    ],
   },
   {
     timestamps: true, // Automatically adds createdAt and updatedAt fields
